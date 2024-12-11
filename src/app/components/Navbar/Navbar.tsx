@@ -49,7 +49,9 @@ export default function Navbar() {
 
         {/* Icons */}
         <div className="flex items-center space-x-6 md:space-x-12 lg:mr-10">
+          <Link href={"/comparison"}>
           <FaUser className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
+          </Link>
           <FaSearch className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
 
           <Link href={"/checkout"}>

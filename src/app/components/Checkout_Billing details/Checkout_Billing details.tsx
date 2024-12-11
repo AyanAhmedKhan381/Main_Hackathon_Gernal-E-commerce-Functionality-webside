@@ -33,7 +33,7 @@ const BillingForm = () => {
           </label>
           <input
             type="text"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -44,7 +44,7 @@ const BillingForm = () => {
           </label>
           <select
             id="country"
-            className="w-full p-2 py-4 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           >
             <option>Sri Lanka</option>
           </select>
@@ -58,7 +58,7 @@ const BillingForm = () => {
           <input
             type="text"
             id="street-address"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -70,7 +70,7 @@ const BillingForm = () => {
           <input
             type="text"
             id="city"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -81,7 +81,7 @@ const BillingForm = () => {
           </label>
           <select
             id="province"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           >
             <option>Western Province</option>
           </select>
@@ -96,7 +96,7 @@ const BillingForm = () => {
             type="text"
             id="zip-code"
             placeholder="ZIP Code"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -109,7 +109,7 @@ const BillingForm = () => {
             type="text"
             id="phone"
             placeholder="Phone"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -122,7 +122,7 @@ const BillingForm = () => {
             type="email"
             id="email"
             placeholder="Email Address"
-            className="w-full py-3.5 p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           />
         </div>
 
@@ -137,7 +137,7 @@ const BillingForm = () => {
           <textarea
             id="additional-info"
             placeholder="Additional information"
-            className="w-full p-2 border rounded-md"
+            className="w-full py-3.5 px-6 border rounded-md"
           ></textarea>
         </div>
       </form>
