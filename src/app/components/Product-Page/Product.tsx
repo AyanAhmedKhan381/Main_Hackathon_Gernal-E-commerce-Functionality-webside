@@ -1,6 +1,6 @@
 import ProductCard from "./ProductCard";
 
-const products = [
+export const products = [
   {
     image: "/PRODUCT-Images/Images (2).png",
     title: "Respira",

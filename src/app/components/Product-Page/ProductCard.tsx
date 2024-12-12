@@ -18,6 +18,7 @@ export default function ProductCard({ image, title, description, price, discount
   return (
     <div className="border rounded-lg shadow-md overflow-hidden bg-white">
       {/* Product Image */}
+      <Link href={"/product"}>
       <div className="relative group">
         <Image
           src={image}
@@ -47,7 +48,7 @@ export default function ProductCard({ image, title, description, price, discount
       </div>
 
       {/* Product Details */}
-      <Link href={"/product"}>
+      
       <div className="p-4">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-gray-500 text-sm">{description}</p>
