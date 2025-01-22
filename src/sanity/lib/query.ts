@@ -2,9 +2,6 @@ import { groq } from "next-sanity";
 
 
 
-export const Remove_Functionlity = '*[_type == "product"]{_id}';  
-
- 
 
 
 export const Single_Product = groq`*[_type == "product" && _id == $id] {
