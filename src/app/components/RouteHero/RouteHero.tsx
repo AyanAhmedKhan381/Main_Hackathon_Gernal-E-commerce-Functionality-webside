@@ -6,7 +6,6 @@ interface Props {
 }
 
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export function HeroSection({Title,miniTitle}:Props) {
   return (
     <div className="relative h-[300px] sm:h-[100px] lg:h-[300px]">

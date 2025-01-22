@@ -1,6 +1,6 @@
 const OrderSummary = () => {
   return (
-    <div className="p-6 rounded-md space-y-6">
+    <div className="p-6 rounded-md space-y-6 shadow-md shadow-black/50 max-h-[650px]">
       {/* Product Header with Subtotal */}
       <div className="flex justify-between items-center ">
         <h2 className="text-2xl font-bold ">Product</h2>
@@ -25,7 +25,7 @@ const OrderSummary = () => {
         </div>
         <div className="flex justify-between font-semibold text-lg">
           <p>Total</p>
-          <p className="text-yellow-500">Rs. 250,000.00</p>
+          <p className="text-black font-semibold">Rs. 250,000.00</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ const OrderSummary = () => {
       </div>
 
       {/* Place Order Button */}
-      <button className="w-fit mt-6 border ml-28 border-black text-black py-2.5 px-14 rounded-md">
+      <button className="w-fit mt-6 border ml-28 border-black text-black bg-white font-semibold hover:bg-black hover:text-white duration-200 hover:border-white py-2.5 px-14 rounded-md">
         Place order
       </button>
     </div>

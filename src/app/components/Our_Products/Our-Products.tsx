@@ -1,133 +1,128 @@
-
-
-
+"use client";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../../../Redux Store/cartSlice";
+import { Products } from "@/types/product";
+import { client } from "@/sanity/lib/client";
+import { allProductQuery } from "@/sanity/lib/query";
 import Image from "next/image";
-
-const products = [
-  {
-    title: "Syltherine",
-    description: "Stylish cafe chair",
-    price: "Rp 2.500.000",
-    originalPrice: "Rp 3.500.000",
-    discount: "30%",
-    img: "/pictures image/IMG-20241208-WA0163.jpg",
-  },
-  {
-    title: "Leviosa",
-    description: "Stylish cafe chair",
-    price: "Rp 2.500.000",
-    img: "/pictures image/IMG-20241208-WA0164.jpg",
-  },
-  {
-    title: "Lolito",
-    description: "Luxury big sofa",
-    price: "Rp 7.000.000",
-    originalPrice: "Rp 14.000.000",
-    discount: "50%",
-    img: "/pictures image/IMG-20241208-WA0165.jpg",
-  },
-  {
-    title: "Respira",
-    description: "Outdoor bar table and stool",
-    price: "Rp 500.000",
-    isNew: true,
-    img: "/pictures image/IMG-20241208-WA0166.jpg",
-  },
-  {
-    title: "Grifo",
-    description: "Night lamp",
-    price: "Rp 1.500.000",
-    img: "/pictures image/IMG-20241208-WA0167.jpg",
-  },
-  {
-    title: "Muggo",
-    description: "Small mug",
-    price: "Rp 150.000",
-    isNew: true,
-    img: "/pictures image/IMG-20241208-WA0169.jpg",
-  },
-  {
-    title: "Pingky",
-    description: "Cute bed set",
-    price: "Rp 7.000.000",
-    originalPrice: "Rp 14.000.000",
-    discount: "50%",
-    img: "/pictures image/IMG-20241208-WA0170.jpg",
-  },
-  {
-    title: "Potty",
-    description: "Minimalist flower pot",
-    price: "Rp 500.000",
-    isNew: true,
-    img: "/pictures image/WhatsApp Image 2024-12-08 at 15.38.41_aa5b27b5.jpg",
-  },
-];
+import Link from "next/link";
+import { urlFor } from "@/sanity/lib/image";
+import { FaTag, FaRegNewspaper, FaShoppingCart, FaTrash, FaCheckCircle } from "react-icons/fa";
 
 const ProductsSection = () => {
+  const [products, setProducts] = useState<Products[]>([]);
+  const [notificationProduct, setNotificationProduct] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: any) => state.cart.items);
+
+  
+  
+  // Fetch products on initial load
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const fetchData: Products[] = await client.fetch(allProductQuery);
+        setProducts(fetchData);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  const handleCartToggle = (product: Products) => {
+    const isInCart = cartItems.some((item: { id: number }) => item.id === Number(product._id));
+
+    if (isInCart) {
+      dispatch(removeFromCart(Number(product._id)));
+    } else {
+      dispatch(
+        addToCart({
+          id: Number(product._id),
+          title: product.title,
+          price: product.price,
+          image: urlFor(product.productImage).url(),
+          quantity: 1,
+        })
+      );
+      setNotificationProduct(product._id); // Show notification for the clicked product
+      setTimeout(() => setNotificationProduct(null), 3000); // Hide notification after 3 seconds
+    }
+  };
+
+  const isProductInCart = (productId: string | number) => {
+    return cartItems.some((item: { id: number | string }) => item.id === productId);
+  };
+
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Section Title */}
-        <h2 className="text-center text-3xl font-semibold mb-8">Our Products</h2>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
-            <div
-              key={index}
-              className="relative bg-white border rounded-lg shadow-lg group"
-            >
-              {/* Product Image */}
-              <div className="relative overflow-hidden">
+    <section className="py-12 px-6 bg-gray-50 ">
+      <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {products.map((product) => (
+          <div
+            key={product._id}
+            className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 overflow-hidden transform hover:translate-y-2"
+          >
+            <Link href={`/product/${product._id}`} passHref>
+              <div className="relative w-full h-64 overflow-hidden rounded-t-xl bg-gradient-to-br from-purple-400 via-pink-500 to-red-500">
                 <Image
-                  src={product.img}
+                  src={urlFor(product.productImage).url()}
                   alt={product.title}
-                  width={300}
-                  height={200}
-                  className="w-full h-auto transition-transform transform group-hover:scale-105"
+                  fill
+                  className="object-cover relative group-hover:scale-110 transition-transform duration-300"
                 />
-                {product.discount && (
-                  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    {product.discount}
-                  </span>
-                )}
-                {product.isNew && (
-                  <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                    New
-                  </span>
-                )}
               </div>
+            </Link>
 
-              {/* Product Details */}
-              <div className="p-4">
-                <h3 className="font-medium text-lg">{product.title}</h3>
-                <p className="text-sm text-gray-600">{product.description}</p>
-                <div className="mt-2">
-                  <span className="font-bold text-black">{product.price}</span>
-                  {product.originalPrice && (
-                    <span className="line-through text-gray-500 text-sm ml-2">
-                      {product.originalPrice}
-                    </span>
-                  )}
-                </div>
-              </div>
+            {/* Labels for Discount and New */}
+            <div className="absolute top-2 left-2 flex space-x-2">
+              {product.dicountPercentage > 0 && (
+                <span className="text-sm bg-red-500 gap-1.5 mr-28 text-white px-2 py-1 rounded-lg font-semibold flex items-center space-x-1">
+                  <FaTag />
+                  {product.dicountPercentage}% off
+                </span>
+              )}
+              {product.isNew && (
+                <span className="ml-2 text-sm bg-green-500 gap-1.5 text-white px-3 py-1 rounded-lg font-semibold flex items-center space-x-1">
+                  <FaRegNewspaper />
+                  New
+                </span>
+              )}
+            </div>
 
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                <button className="bg-white text-black px-4 py-2 rounded">
-                  Add to cart
+            <div className="p-6">
+              <h3 className="font-semibold text-lg text-gray-800 line-clamp-1">{product.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3 mt-2">{product.description}</p>
+
+              <div className="mt-4 flex justify-between items-center">
+                <span className="text-xl font-bold text-gray-900">${product.price}</span>
+
+                {/* Add/Remove Button */}
+                <button
+                  onClick={() => handleCartToggle(product)}
+                  className={`px-5 py-2.5 text-white font-semibold rounded-lg w-fit h-fit transition-all duration-300 transform ${
+                    isProductInCart(product._id)
+                      ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 scale-105"
+                      : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 scale-105"
+                  } flex justify-center items-center`}
+                >
+                  {isProductInCart(product._id) ? <FaTrash /> : <FaShoppingCart />}
+                  <span className="ml-2">
+                    {isProductInCart(product._id) ? "Remove from Cart" : "Add to Cart"}
+                  </span>
                 </button>
               </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Show More Button */}
-        <div className="text-center mt-8">
-          <button className="px-6 py-2 bg-white rounded shadow text-[#B88E2F] hover:scale-105 border border-[#B88E2F]">
-            Show More
-          </button>
-        </div>
+              {/* Show notification for the current product */}
+              {notificationProduct === product._id && (
+                <div className="absolute z-50 top-4 right-4 flex items-center gap-2 bg-green-600 text-white text-sm font-bold px-4 py-2 rounded-md shadow-lg">
+                  <FaCheckCircle />
+                  Added to Cart!
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

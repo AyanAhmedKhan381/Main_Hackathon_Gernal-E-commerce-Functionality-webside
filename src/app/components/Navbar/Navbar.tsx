@@ -1,17 +1,25 @@
-
-
-
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import { FaUser, FaSearch, FaHeart, FaShoppingCart } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../Redux Store/store"; // Adjust import based on your store path
+import ShoppingCart from "./ShoppingCart";
+import UserLogin from "./UserLogin";
+import { useState } from "react";
 
 export default function Navbar() {
+  // State to toggle mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Access the cart items from the Redux store
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
   return (
-    <header className="bg-white shadow-md w-[99%] lg:w-[1535px] pt-1 lg:h-[100px]">
-      <nav className="container mx-auto px-4 lg:px-14 py-4 flex justify-between items-center w-[1286px]lg:w-[1286px] lg:h-[41px] mt-[29px] lg:left-[54px]">
+    <header className="bg-white shadow-md w-full pt-1">
+      <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          
           <Image
             src={"/icons/LOGO Icon.png"}
             alt="logo"
@@ -19,12 +27,14 @@ export default function Navbar() {
             height={150}
           />
           <Link href={"/"}>
-          <h1 className="text-black mr-1 font-bold text-xl md:text-3xl">Furniro</h1>
+            <h1 className="text-black mr-1 font-bold text-xl md:text-3xl">Furniro</h1>
           </Link>
         </div>
 
+        
+
         {/* Navigation Links */}
-        <ul className="hidden md:flex space-x-6 lg:space-x-16 lg:ml-9 text-gray-700">
+        <ul className={`md:flex space-x-6 lg:space-x-16 text-gray-700 ${isMenuOpen ? 'block' : 'hidden'} md:block`}>
           <li>
             <Link href="/" className="hover:text-yellow-500">
               Home
@@ -49,22 +59,20 @@ export default function Navbar() {
 
         {/* Icons */}
         <div className="flex items-center space-x-6 md:space-x-12 lg:mr-10">
+          <UserLogin />
+
           <Link href={"/comparison"}>
-          <FaUser className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
+            <FaSearch className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
           </Link>
-          <FaSearch className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
 
           <Link href={"/checkout"}>
-          <FaHeart className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
+            <FaHeart className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
           </Link>
 
-          <Link href={"/cart"}>
-          <FaShoppingCart className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
-
-          </Link>
+          {/* Cart Icon with item count */}
+          <ShoppingCart cartItems={cartItems} />
         </div>
       </nav>
     </header>
   );
 }
-

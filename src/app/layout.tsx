@@ -3,6 +3,8 @@ import { Poppins } from "next/font/google"; // Import Poppins font from Google
 import "./globals.css";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer-Section/Footer";
+import Providers from "@/Provider/Provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // Configure Poppins font
 const poppins = Poppins({
@@ -22,12 +24,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={poppins.variable}>
+    <ClerkProvider>
+    
+      <html lang="en" className={poppins.variable}>
       <body className="antialiased">
+      <Providers>
         <Navbar />
         {children}
         <Footer />
+        </Providers>
+
       </body>
     </html>
+    </ClerkProvider>
   );
 }

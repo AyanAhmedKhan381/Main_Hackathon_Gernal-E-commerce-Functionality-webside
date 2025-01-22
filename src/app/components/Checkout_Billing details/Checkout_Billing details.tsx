@@ -1,6 +1,6 @@
 const BillingForm = () => {
   return (
-    <div className="p-6 rounded-md">
+    <div className="p-6 rounded-md bg-white/80 shadow-md shadow-black/50">
       <h2 className="text-2xl font-bold mb-4">Billing details</h2>
       <form className="space-y-4">
         {/* First Name and Last Name */}
