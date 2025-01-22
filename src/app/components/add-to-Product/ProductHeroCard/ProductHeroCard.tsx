@@ -1,14 +1,12 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import "./Loader.css";
 import { Single_Product } from "@/sanity/lib/query";
 import { Products } from "@/types/product";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // useParams hook for dynamic routes
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import { IoIosStar } from "react-icons/io";
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaCheckCircle, FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { urlFor } from "@/sanity/lib/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/Redux Store/cartSlice"; // Import addToCart action
@@ -18,6 +16,9 @@ const Product_Hero_Card = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [notificationProduct, setNotificationProduct] = useState<string | null>(null);
+  
+  // State for quantity
+  const [quantity, setQuantity] = useState<number>(1); 
 
   useEffect(() => {
     if (id) {
@@ -41,12 +42,21 @@ const Product_Hero_Card = () => {
           title: product.title,
           price: product.price,
           image: urlFor(product.productImage).url(),
-          quantity: 1, // Default quantity, can be changed later
+          quantity, // Send updated quantity to the cart
         })
       );
       setNotificationProduct(product._id); // Show the notification when added to cart
       setTimeout(() => setNotificationProduct(null), 3000); // Hide notification after 3 seconds
     }
+  };
+
+  // Handle increasing and decreasing quantity
+  const handleQuantityChange = (type: "increase" | "decrease") => {
+    setQuantity((prevQuantity) => {
+      if (type === "increase") return prevQuantity + 1;
+      if (type === "decrease" && prevQuantity > 1) return prevQuantity - 1;
+      return prevQuantity;
+    });
   };
 
   if (!product) {
@@ -89,7 +99,7 @@ const Product_Hero_Card = () => {
         {/* Right: Product Details */}
         <div className="ml-6 flex-1">
           <h1 className="text-5xl mb-3 font-semibold">{product.title}</h1>
-          <h1 className="text-2xl font-bold text-gray-600">Rs. {product.price}</h1>
+          <h1 className="text-2xl font-bold text-gray-600">${product.price}</h1>
           <div className="flex items-center space-x-2 mt-2 mb-2">
             <span className="text-yellow-300 text-lg flex">
               <IoIosStar />
@@ -127,8 +137,18 @@ const Product_Hero_Card = () => {
 
           {/* Quantity Selector */}
           <div className="mt-4 flex items-center space-x-4">
-            <button className="px-8 py-2.5 border border-gray-600 text-black rounded-lg hover:bg-gray-100 transition">
-              <span className="mr-3">-</span> 1 <span className="ml-3">+</span>
+            <button
+              onClick={() => handleQuantityChange("decrease")}
+              className="px-4 py-1 border border-gray-600 text-black rounded-lg hover:bg-gray-100 transition"
+            >
+              <span className=""> -</span>
+            </button>
+            <span className="text-xl">{quantity}</span>
+            <button
+              onClick={() => handleQuantityChange("increase")}
+              className="px-4 py-1 border border-gray-600 text-black rounded-lg hover:bg-gray-100 transition"
+            >
+              <span>+</span>
             </button>
             <button
               onClick={handleAddToCart}
@@ -142,6 +162,7 @@ const Product_Hero_Card = () => {
           {/* Notification */}
           {notificationProduct && (
             <div className="absolute top-4 right-4 bg-green-500 text-white p-3 rounded-lg shadow-lg flex items-center gap-2">
+              <FaCheckCircle />
               <span>Added to Cart!</span>
             </div>
           )}
