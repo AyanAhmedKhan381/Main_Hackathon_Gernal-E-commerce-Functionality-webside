@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import "./Loader.css"
 import { client } from "@/sanity/lib/client";
 import { Single_Product } from "@/sanity/lib/query";
 import { Products } from "@/types/product";
@@ -25,7 +26,7 @@ const Product_Hero_Card = () => {
       async function fetchProduct() {
         try {
           const fetchData: Products[] = await client.fetch(Single_Product, { id });
-          setProduct(fetchData[0]); // Assuming only one product is fetched
+          setProduct(fetchData[0]);
         } catch (error) {
           console.error("Error fetching product:", error);
         }

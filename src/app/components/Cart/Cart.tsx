@@ -1,17 +1,14 @@
-
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../Redux Store/store";
-import { removeFromCart } from "../../../Redux Store/cartSlice";
+import { removeFromCart, addToCart } from "../../../Redux Store/cartSlice";
 import Link from "next/link";
 import Image from "next/image"; // Importing Image from Next.js
-
+import EmptyCart from "../Helper/EmptyCart";
 
 const Cart = () => {
   const { items, totalPrice } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
-
-
 
   const handleRemoveItem = (id: number) => {
     console.log("Attempting to remove item with ID:", id); // Log the ID
@@ -21,8 +18,20 @@ const Cart = () => {
     }
     dispatch(removeFromCart(id));
   };
-  
-  
+
+  const handleQuantityChange = (id: number, newQuantity: number) => {
+    if (newQuantity <= 0) return; // Don't allow negative or zero quantities
+    const itemToUpdate = items.find(item => item.id === id);
+
+    if (itemToUpdate) {
+      dispatch(
+        addToCart({
+          ...itemToUpdate,
+          quantity: newQuantity,
+        })
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row justify-center items-start p-5 lg:p-10">
@@ -42,7 +51,7 @@ const Cart = () => {
             {items.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-center text-xl mt-10">
-                  Your cart is empty
+                 <EmptyCart/>
                 </td>
               </tr>
             ) : (
@@ -62,12 +71,15 @@ const Cart = () => {
                   <td className="p-2 md:p-3">
                     <input
                       type="number"
-                     
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(item.id, parseInt(e.target.value))
+                      }
                       className="w-10 md:w-12 border rounded p-1 text-center text-xs md:text-sm"
                     />
                   </td>
                   <td className="p-2 md:p-3 text-xs md:text-sm">
-                    ${item.price * item.quantity}
+                    ${(item.price * item.quantity).toFixed(2)}
                   </td>
                   <td className="p-2 md:p-3">
                     <button

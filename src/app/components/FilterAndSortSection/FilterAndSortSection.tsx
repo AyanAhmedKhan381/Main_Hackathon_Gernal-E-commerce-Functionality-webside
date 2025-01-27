@@ -1,8 +1,12 @@
+import SearchInput from "../Helper/SearchInput";
+import SearchIcon from "../Navbar/SearchIcon";
+
 export default function FilterAndSortSection() {
   return (
-    <div className="flex flex-wrap items-center justify-between bg-[#faf4ed] p-4 border-b border-gray-200 space-y-4 md:space-y-0">
+   <div className=" bg-[#faf4ed]">
+     <div className="flex flex-wrap items-center justify-between bg-[#faf4ed] p-4 border-b border-gray-200 space-y-4 md:space-y-0 max-w-screen-2xl mx-auto">
       {/* Filter and Layout Options */}
-      <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 w-full sm:w-auto ">
         {/* Filter Button */}
         <button className="flex items-center space-x-2 text-gray-800">
           <svg
@@ -53,10 +57,11 @@ export default function FilterAndSortSection() {
         </div>
       </div>
 
-      {/* Results Information */}
-      <div className="text-gray-700 text-sm w-full sm:w-auto text-center">
-        Showing <span className="font-bold">1–16</span>
+      {/* Search Input */}
+      <div className="">
+      <SearchIcon icon={<SearchInput/>}/>
       </div>
+      
 
       {/* Show and Sort Options */}
       <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 w-full sm:w-auto">
@@ -89,5 +94,6 @@ export default function FilterAndSortSection() {
         </div>
       </div>
     </div>
+   </div>
   );
 }

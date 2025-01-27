@@ -6,9 +6,11 @@ import { ThreeProductQuery } from "@/sanity/lib/query";
 import { Products } from "@/types/product";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { FaSpinner } from "react-icons/fa"; // Import spinner icon for loading
 
 const BrowseSection = () => {
   const [ThreeProducts, ThreeSetProducts] = useState<Products[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     async function fetchProducts() {
@@ -18,6 +20,8 @@ const BrowseSection = () => {
         ThreeSetProducts(fetchData);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetch completes
       }
     }
     fetchProducts();
@@ -33,45 +37,38 @@ const BrowseSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Render dynamic products */}
-        {ThreeProducts.length > 0 ? (
-          ThreeProducts.map((product) => (
-            <div key={product._id} className="group">
-              <div className="relative overflow-hidden rounded-lg shadow-lg">
-                <Image
-                  src={urlFor(product.productImage).url()}
-                  alt={product.title || "Product Image"}
-                  width={400}
-                  height={300}
-                  className="w-full h-auto transition-transform transform group-hover:scale-105"
-                />
-              </div>
-              <h3 className="text-center mt-4 text-lg font-medium">
-                {product.title || "Untitled Product"}
-              </h3>
-              
-            </div>
-          ))
+        {/* Show a loading spinner while fetching */}
+        {loading ? (
+          <div className="col-span-full flex flex-col items-center justify-center space-y-4">
+            <FaSpinner className="animate-spin text-4xl text-yellow-500" />
+            <p className="text-lg text-gray-500">Loading products...</p>
+          </div>
         ) : (
-          // Static data fallback (optional)
-          [
-            { title: "Dining", img: "/images/Image-living room.png" },
-            { title: "Living", img: "/images/Mask Group (1).png" },
-            { title: "Bedroom", img: "/images/Mask Group.png" },
-          ].map((item, index) => (
-            <div key={index} className="group">
-              <div className="relative overflow-hidden rounded-lg shadow-lg">
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  width={400}
-                  height={300}
-                  className="w-full h-auto transition-transform transform group-hover:scale-105"
-                />
+          // Render dynamic products after fetching
+          ThreeProducts.length > 0 ? (
+            ThreeProducts.map((product) => (
+              <div key={product._id} className="group">
+                <div className="relative overflow-hidden rounded-lg shadow-lg">
+                  <Image
+                    src={urlFor(product.productImage).url()}
+                    alt={product.title || "Product Image"}
+                    width={400}
+                    height={300}
+                    className="w-full h-auto transition-transform transform group-hover:scale-105"
+                    priority // This will ensure images load first
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium">
+                  {product.title || "Untitled Product"}
+                </h3>
               </div>
-              <h3 className="text-center mt-4 text-lg font-medium">{item.title}</h3>
+            ))
+          ) : (
+            // If no products are fetched, show a fallback message
+            <div className="col-span-full flex flex-col items-center justify-center space-y-4">
+              <p className="text-lg text-gray-500">No products available.</p>
             </div>
-          ))
+          )
         )}
       </div>
     </section>

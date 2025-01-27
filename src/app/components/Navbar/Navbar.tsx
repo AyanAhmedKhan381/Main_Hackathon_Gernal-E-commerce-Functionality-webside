@@ -7,6 +7,7 @@ import { RootState } from "../../../Redux Store/store"; // Adjust import based o
 import ShoppingCart from "./ShoppingCart";
 import UserLogin from "./UserLogin";
 import { useState } from "react";
+import SearchIcon from "./SearchIcon";
 
 export default function Navbar() {
   // State to toggle mobile menu
@@ -27,7 +28,7 @@ export default function Navbar() {
             height={150}
           />
           <Link href={"/"}>
-            <h1 className="text-black mr-1 font-bold text-xl md:text-3xl">Furniro</h1>
+            <h1 className="text-black mr-1 uppercase font-bold text-xl md:text-3xl">FurHavn</h1>
           </Link>
         </div>
 
@@ -58,12 +59,10 @@ export default function Navbar() {
         </ul>
 
         {/* Icons */}
-        <div className="flex items-center space-x-6 md:space-x-12 lg:mr-10">
+        <div className="flex items-center space-x-6 md:space-x-14 lg:mr-10">
           <UserLogin />
 
-          <Link href={"/comparison"}>
-            <FaSearch className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
-          </Link>
+          <SearchIcon icon={          <FaSearch className="text-lg text-gray-700 font-bold mt-1 hover:text-yellow-500 duration-200 hover:animate-bounce" />}/>
 
           <Link href={"/checkout"}>
             <FaHeart className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />

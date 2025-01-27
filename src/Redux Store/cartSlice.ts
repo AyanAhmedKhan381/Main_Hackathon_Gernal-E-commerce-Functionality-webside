@@ -24,20 +24,18 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // Add item to cart
+    // Add or update item in cart
     addToCart(state, action: PayloadAction<CartItem>) {
-      
       const newItem = {
         ...action.payload,
         id: action.payload.id ? action.payload.id : Date.now(),
       };
-      
 
       const existingItem = state.items.find(item => item.id === newItem.id);
 
       if (existingItem) {
-        existingItem.quantity += newItem.quantity;
-        state.totalPrice += newItem.price * newItem.quantity;
+        existingItem.quantity = newItem.quantity; // Update quantity
+        state.totalPrice = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
       } else {
         state.items.push(newItem);
         state.totalPrice += newItem.price * newItem.quantity;
@@ -53,14 +51,14 @@ const cartSlice = createSlice({
     // Remove item from cart
     removeFromCart(state, action: PayloadAction<number>) {
       const _id = action.payload;
-    
+
       if (typeof _id !== "number" || isNaN(_id)) {
         console.error("Invalid ID provided for removal:", _id);
         return;
       }
-    
+
       const itemToRemove = state.items.find(item => item.id === _id);
-    
+
       if (itemToRemove) {
         state.totalPrice -= itemToRemove.price * itemToRemove.quantity;
         state.items = state.items.filter(item => item.id !== _id);
@@ -68,9 +66,9 @@ const cartSlice = createSlice({
       } else {
         console.error("Item not found in cart:", _id);
       }
-    
+
       state.totalPrice = Math.max(0, state.totalPrice); // Ensure non-negative total
-    },    
+    },
   },
 });
 

@@ -1,0 +1,14 @@
+/* Global Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px; /* Controls the width of the scrollbar */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #3182ce; /* Blue color */
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  

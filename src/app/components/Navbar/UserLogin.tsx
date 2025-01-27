@@ -12,7 +12,7 @@ const Clerk_SignIn_Button = () => {
         </SignedIn>
         <SignedOut>
           <Link href="/sign-in" className="text-base hover:text-darkOrange duration-300 cursor-pointer uppercase font-semibold">
-          <FaUser className="text-gray-700 hover:text-yellow-500 text-lg cursor-pointer" />
+          <FaUser className="text-gray-700 hover:text-yellow-500 text-xl cursor-pointer" />
 
           </Link>
         </SignedOut>

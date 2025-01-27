@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import SearchIcon from '../Navbar/SearchIcon';
+import SearchInput from '../Helper/SearchInput';
 
 const Sidebar = () => {
   const [search, setSearch] = useState('');
@@ -16,15 +18,8 @@ const Sidebar = () => {
   return (
     <aside className="p-6 py-5 rounded-lg">
       {/* Search Bar */}
-      <div className="relative mb-8">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search..."
-          className="w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring focus:ring-gray-200"
-        />
-        <FiSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500" />
+      <div className="mb-2">
+      <SearchIcon icon={<SearchInput/>}/>
       </div>
 
       {/* Categories Section */}

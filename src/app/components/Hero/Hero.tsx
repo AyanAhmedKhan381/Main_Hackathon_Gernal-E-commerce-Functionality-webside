@@ -43,6 +43,7 @@
 
 import Image from "next/image";
 import banner from "../../../../public/background/hero background.jpeg"; // Ensure the image is correctly placed in the public folder.
+import Link from "next/link";
 
 export default function HeroBanner() {
   return (
@@ -68,9 +69,11 @@ export default function HeroBanner() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut <br />
             elit tellus, luctus nec ullamcorper mattis.
           </p>
+          <Link href={"shop"}>
           <button className="text-white px-10 py-4 rounded-sm shadow-lg hover:bg-yellow-600 font-semibold bg-[#B88E2F]">
             Buy Now
           </button>
+          </Link>
         </div>
         
       </div>
