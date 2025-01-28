@@ -6,7 +6,7 @@ import Footer from "./components/Footer-Section/Footer";
 import Providers from "@/Provider/Provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import StripeProvider from "@/StripeProvider/StripeProvider";
-import ChatIcon from "./components/Chat_Bot_Icon/Chat_Bot_Icon";
+// import ChatIcon from "./components/Chat_Bot_Icon/Chat_Bot_Icon";
 
 // Configure Poppins font
 const poppins = Poppins({
@@ -43,7 +43,7 @@ export default function RootLayout({
         <Footer />
         </Providers>
         </StripeProvider>
-        <ChatIcon />
+        {/* <ChatIcon /> */}
 
       </body>
     </html>

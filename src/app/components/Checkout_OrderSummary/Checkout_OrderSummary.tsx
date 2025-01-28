@@ -43,11 +43,12 @@ const OrderSummary = () => {
   const { items, totalPrice } = useSelector((state: RootState) => state.cart);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("bank");
+  const [error, setError] = useState<string | null>(null);
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
 
-  const discountRate = 0.01; // 1% discount
+  const discountRate = parseFloat(process.env.NEXT_PUBLIC_DISCOUNT_RATE || "0.01"); // Dynamic discount rate
   const discountedTotal = totalPrice - totalPrice * discountRate;
 
   const handlePlaceOrder = async () => {
@@ -56,18 +57,22 @@ const OrderSummary = () => {
       return;
     }
 
+    if (items.length === 0) {
+      alert("Your cart is empty. Please add some items before proceeding.");
+      return;
+    }
+
     setLoading(true);
+    setError(null);
 
     try {
       if (paymentMethod === "bank") {
-        // Handle bank transfer logic
         alert("Bank Transfer option selected. (Implement payment logic here)");
         setLoading(false);
         return;
       }
 
       if (paymentMethod === "cash") {
-        // Handle cash on delivery logic
         alert("Cash On Delivery option selected. (Implement logic here)");
         setLoading(false);
         return;
@@ -101,14 +106,14 @@ const OrderSummary = () => {
         });
 
         if (error) {
-          alert(`Payment failed: ${error.message}`);
+          setError(`Payment failed: ${error.message}`);
         } else {
           router.push("/payment-success");
         }
       }
     } catch (error: any) {
       console.error("Error during payment process:", error);
-      alert(`Payment error: ${error?.message || "Unknown error"}`);
+      setError(error?.message || "Unknown error occurred during payment.");
     } finally {
       setLoading(false);
     }
@@ -146,7 +151,7 @@ const OrderSummary = () => {
           <p className="text-gray-800">${totalPrice.toLocaleString()}</p>
         </div>
         <div className="flex justify-between text-xl font-bold">
-          <p className="text-gray-700">Total (After 1% Discount)</p>
+          <p className="text-gray-700">Total (After {discountRate * 100}% Discount)</p>
           <p className="text-green-600">${discountedTotal.toLocaleString()}</p>
         </div>
       </div>
@@ -183,17 +188,45 @@ const OrderSummary = () => {
         </p>
       </div>
 
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
       <div className="gap-5">
         <button
           onClick={handlePlaceOrder}
-          className={`w-full py-2.5 ${
+          className={`w-full py-2.5 flex items-center justify-center ${
             loading ? "bg-gray-400" : "bg-black hover:bg-white"
           } text-white text-lg font-bold rounded-xl ${
             loading ? "cursor-not-allowed" : "hover:border-black hover:text-black"
           } duration-200`}
           disabled={loading}
         >
-          {loading ? "Processing..." : "Proceed to Checkout"}
+          {loading ? (
+            <div className="flex items-center">
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+              Processing...
+            </div>
+          ) : (
+            "Proceed to Checkout"
+          )}
         </button>
 
         <span className="border mb-1 mt-1 border-b-black"></span>
@@ -201,6 +234,7 @@ const OrderSummary = () => {
         <button
           className="w-full py-2.5 mt-3 border border-gray-400 hover:border-black text-white text-lg font-semibold rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105"
           disabled={loading}
+          onClick={() => alert("PayPal payment is not implemented yet.")}
         >
           <Image
             src="/pictures/images/paypalLogo.png"
