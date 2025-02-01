@@ -1,38 +1,73 @@
-import { NextRequest, NextResponse } from "next/server";
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+import { CartItem } from "@/Redux Store/cartSlice";
 
-export async function POST(request: NextRequest) {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-01-27.acacia", // Update this to the correct version
+});
+
+
+export async function POST(request: Request) {
   try {
-    // Parse the request body to get the amount
-    const { amount } = await request.json();
+    const { products }: { products: CartItem[] } = await request.json();
 
-    // Validate that the amount is a valid number
-    if (!amount || typeof amount !== "number" || amount <= 0) {
-      return NextResponse.json(
-        { error: "Invalid amount. Please provide a valid number greater than 0." },
-        { status: 400 }
-      );
+    if (!products || products.length === 0) {
+      return NextResponse.json({ error: "No products found in request" }, { status: 400 });
     }
 
-    // Convert the amount to cents
-    const amountInCents = Math.round(amount * 100);
+    const activeProducts = (await stripe.products.list()).data.filter((p) => p.active);
 
-    // Create a payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInCents,
-      currency: "usd",
-      automatic_payment_methods: { enabled: true },
+    const lineItems = await Promise.all(
+      products.map(async (product) => {
+        let stripeProduct = activeProducts.find(
+          (item) => item.name.toLowerCase() === product.title.toLowerCase()
+        );
+
+        if (!stripeProduct) {
+          stripeProduct = await stripe.products.create({
+            name: product.title,
+            images: [product.image],
+          });
+
+          const price = await stripe.prices.create({
+            unit_amount: Math.round(product.price * 100),
+            currency: "usd",
+            product: stripeProduct.id,
+          });
+
+          return {
+            price: price.id,
+            quantity: product.quantity,
+          };
+        }
+
+        const existingPrice = await stripe.prices.list({
+          product: stripeProduct.id,
+          active: true,
+        });
+
+        if (!existingPrice.data.length) {
+          throw new Error(`No price found for product: ${stripeProduct.name}`);
+        }
+
+        return {
+          price: existingPrice.data[0].id,
+          quantity: product.quantity,
+        };
+      })
+    );
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
+      line_items: lineItems,
     });
 
-    // Return the client secret
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error: any) {
-    console.error("Stripe error:", error); // Log the full error details for debugging
-
-    // Return a generic error message to the client
-    return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ url: session.url });
+  } catch (error) {
+    console.error("Stripe Checkout Error:", error);
+    return NextResponse.json({ error: "Failed to create Stripe Checkout session" }, { status: 500 });
   }
 }

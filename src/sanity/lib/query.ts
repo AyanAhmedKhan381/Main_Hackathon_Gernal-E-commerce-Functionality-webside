@@ -14,6 +14,34 @@ export const Single_Product = groq`*[_type == "product" && _id == $id] {
   isNew
 }`
 
+export const Order_Query = groq`
+  *[_type == "order"] | order(createdAt desc) {
+    _id,
+    createdAt,
+    status,
+    totalPrice,
+    discountedTotal,
+    customer {
+      firstName,
+      lastName,
+      phone,
+      email,
+      address {
+        country,
+        city,
+        streetAddress
+      }
+    },
+    items[] {
+      productId,
+      productName,
+      productPrice,
+      quantity
+    }
+  }
+`;
+
+
 export const allProductQuery = groq`*[_type == "product"] {
     _id,
     title,

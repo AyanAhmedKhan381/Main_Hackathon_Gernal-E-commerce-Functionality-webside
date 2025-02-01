@@ -9,10 +9,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { FaTag, FaRegNewspaper, FaShoppingCart, FaTrash, FaCheckCircle, FaSpinner } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+
 
 const ProductsSection = () => {
   const [notificationProduct, setNotificationProduct] = useState<string | null>(null);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [quantity, setQuantity] = useState<number>(1); // State to track loading
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
 
@@ -46,9 +49,24 @@ const ProductsSection = () => {
           title: product.title,
           price: product.price,
           image: urlFor(product.productImage).url(),
-          quantity: 1,
+          quantity: quantity,
+          productPrice: product.price, // Ensure productPrice is added
+          productName: product.title,
+          productImage: urlFor(product.productImage).url(),
         })
       );
+      
+      // Show success toast outside of the dispatch function
+      toast.success("Add to Cart Successful", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+
       setNotificationProduct(product._id); // Show notification for the clicked product
       setTimeout(() => setNotificationProduct(null), 3000); // Hide notification after 3 seconds
     }
@@ -91,7 +109,6 @@ const ProductsSection = () => {
                      className="text-sm bg-red-500 gap-1.5 mr-28 text-white px-2 py-1 rounded-lg font-semibold flex items-center space-x-1">
                     <FaTag />
                     {product.dicountPercentage}% off
-                 
                   </label>
                 )}
                 {product.isNew && (
@@ -99,7 +116,6 @@ const ProductsSection = () => {
                     className="ml-2 text-sm bg-green-500 gap-1.5 text-white px-3 py-1 rounded-lg font-semibold flex items-center space-x-1">
                     <FaRegNewspaper />
                     New
-                  
                  </label>
                 )}
               </div>
@@ -139,6 +155,7 @@ const ProductsSection = () => {
           ))
         )}
       </div>
+      <ToastContainer />
     </section>
   );
 };

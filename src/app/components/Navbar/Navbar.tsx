@@ -28,7 +28,7 @@ export default function Navbar() {
             height={150}
           />
           <Link href={"/"}>
-            <h1 className="text-black mr-1 uppercase font-bold text-xl md:text-3xl">FurHavn</h1>
+            <h1 className="text-black mr-1 uppercase font-bold text-xl hidden md:block md:text-3xl">FurHavn</h1>
           </Link>
         </div>
 

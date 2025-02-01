@@ -1,0 +1,25 @@
+/* Optimized Background */
+.bg-gradient {
+    background: linear-gradient(45deg, #6EE7B7, #3B82F6);
+  }
+  
+  /* Remove gradient animation for performance */
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+  
+  /* Simplified Frosted Glass Effect */
+  .frosted-glass {
+    background: rgba(255, 255, 255, 0.2); /* Reduced transparency */
+    backdrop-filter: blur(5px); /* Reduced blur */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+  }
+  
+  /* Hover Effects for Table Rows */
+  tr:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease;
+  }
+  

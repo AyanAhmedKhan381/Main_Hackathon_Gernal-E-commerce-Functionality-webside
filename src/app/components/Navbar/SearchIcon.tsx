@@ -31,6 +31,7 @@ const SearchIcon = ({icon}:Props) => {
   const [searchResults, setSearchResults] = useState<Products[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [quantity, setquantityh] = useState(1);
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -61,9 +62,12 @@ const SearchIcon = ({icon}:Props) => {
           title: product.title,
           price: product.price,
           image: urlFor(product.productImage).url(),
-          quantity: 1,
+          quantity: quantity,
+          productPrice: product.price, // Ensure productPrice is added
+          productName: product.title,
+          productImage: urlFor(product.productImage).url(),
         })
-      );
+      )
       setSuccessMessage("Added to cart successfully!");
     }
   

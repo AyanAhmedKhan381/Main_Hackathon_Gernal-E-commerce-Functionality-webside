@@ -3,11 +3,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { billingFormSchema, BillingFormData } from "./billingFormSchema"; // Import schema
 import { useState } from "react"; // Import useState hook
+import { useDispatch } from 'react-redux';  // Import useDispatch from react-redux
+import { setBillingDetails } from "@/Redux Store/cartSlice"; // Assuming the correct import path
 
 const BillingForm = () => {
+  const dispatch = useDispatch();  // Initialize dispatch
+
   const [formData, setFormData] = useState<BillingFormData | null>(null); // State to hold form data
   const [provinces, setProvinces] = useState<string[]>([]); // State to store provinces based on selected country
-  console.log(formData)
+  // console.log(formData);
 
   const countries = ["Sri Lanka", "India", "Pakistan"]; // List of countries
   const provincesData: { [key: string]: string[] } = {
@@ -31,8 +35,9 @@ const BillingForm = () => {
   };
 
   const onSubmit = (data: BillingFormData) => {
-    console.log(data); // Log the form data to console (for debugging)
+    // console.log(data); // Log the form data to console (for debugging)
     setFormData(data); // Store form data in state
+    dispatch(setBillingDetails(data)); // Dispatch action to set billing details
     reset(); // Clear the form fields after submit
     // Here you can send `formData` to an API or another function for further processing
   };

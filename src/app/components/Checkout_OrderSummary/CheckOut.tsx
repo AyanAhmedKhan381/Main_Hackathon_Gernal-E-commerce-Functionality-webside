@@ -1,11 +1,11 @@
-"use client"
+"use client";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import BillingForm from "../Checkout_Billing details/Checkout_Billing details";
 import OrderSummary from "../Checkout_OrderSummary/Checkout_OrderSummary";
 
 // Initialize Stripe with your publishable key
-const stripePromise = loadStripe("pk_test_51QlWw3074jStp5VOov5epOM72LQgb54rAlTDFoTGxkdHw5fBML9PXGnn1ry7O7gOjbmnbNGUkwFzcXzCbmie1NDs00jUqZeLdP")
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const Checkout = () => {
   return (

@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "@/Redux Store/cartSlice"; // Ensure the path to your Redux store is correct
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // ✅ Import CSS
 import Link from "next/link";
 
 export interface Products {
@@ -40,8 +42,21 @@ const ProductCard = ({
         price,
         image: urlFor(productImage).url(),
         quantity: 1,
+        productPrice: 0,
+        productName: "",
+        productImage: "",
       })
     );
+    toast.success("Order Successful On Cash Delivery", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
   return (
@@ -96,6 +111,9 @@ const ProductCard = ({
           Add to Cart
         </button>
       </div>
+
+      {/* ✅ Toast Container added here */}
+      <ToastContainer />
     </div>
   );
 };
