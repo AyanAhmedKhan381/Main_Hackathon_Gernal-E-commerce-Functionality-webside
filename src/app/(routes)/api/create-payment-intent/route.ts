@@ -60,8 +60,8 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: `https://vercel.com/ayan-ahmed-khans-projects/main-hackathon-gernal-e-commerce-functionality-webside/payment-success`,
-      cancel_url: `https://vercel.com/ayan-ahmed-khans-projects/main-hackathon-gernal-e-commerce-functionality-webside/cart`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
       line_items: lineItems,
     });
 
